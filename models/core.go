@@ -21,4 +21,22 @@ func init() {
 	if err != nil {
 		panic("failed to connect database")
 	}
+
+	// 自动同步表结构
+	db.AutoMigrate(&User{})
+	var count int
+	// Model(&User{})查询用户表, Count(&count) 将用户表的数据赋值给count字段。
+	if err := db.Model(&User{}).Count(&count).Error; err == nil && count == 0 {
+		//新增
+		db.Create(&User{Name: "admin",
+			//邮箱
+			Email: "admin@qq.com",
+			//密码
+			Pwd: "123123",
+			//头像地址
+			Avatar: "/static/images/info-img.png",
+			//角色 管理员
+			Role: 0,
+		})
+	}
 }
